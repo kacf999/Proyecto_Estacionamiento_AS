@@ -14,10 +14,13 @@
 		response.sendRedirect(url);
 	}
 	%>
-		
+	
 	<form action="CerrarSesion" method="post">
-	<h1>¡Bienvenido, ${sessionScope.usuario}! <button type="submit" class="btn btn-primary btn-large">Cerrar sesión</button>
-	</h1></form>
+	<h1>¡Bienvenido, ${sessionScope.usuario}!
+	<button type="submit" class="btn btn-primary btn-large">Cerrar sesión</button>
+	</h1>
+	
+	</form>
     <h2>Menú Principal</h2>
     <form action="gestionarPropietario.jsp" method="post">
         <input type="submit" value="Gestionar Propietario">

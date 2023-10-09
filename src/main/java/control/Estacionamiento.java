@@ -1,6 +1,8 @@
 package control;
+import modelo.CodigoQR;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import almacen.ConexionBD;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,6 +50,19 @@ public class Estacionamiento extends HttpServlet {
                         // Obtener los datos del ticket
                         String fechaEmision = obtenerFechaEmisionTicket(matricula);
                         String horaEmision = obtenerHoraEmisionTicket(matricula);
+                        
+                        String informacion = "Propietario ID: "+id_propietario+
+                        				"\nMatricula: "+matricula+
+                        				 "\nEspacio Asignado "+espacio;
+                     
+                        System.out.println(informacion);
+                        CodigoQR codigoQR = new CodigoQR(informacion);
+                    	codigoQR.generarQr();
+                    	
+                    	String ruta = codigoQR.getNombreArchivo();
+                        
+
+                        
 
                         // Mostrar mensaje y datos del ticket al usuario
                         response.getWriter().println("Su vehículo se ha asignado al espacio " + espacio + " del estacionamiento.");
@@ -54,6 +70,8 @@ public class Estacionamiento extends HttpServlet {
                         response.getWriter().println("Fecha de emisión: " + fechaEmision);
                         response.getWriter().println("Hora de emisión: " + horaEmision);
                         response.getWriter().println("Matrícula registrada: " + matricula);
+                        
+                        response.getWriter().println("Su iamgen de codigo qr es: "+ruta);
                     } else {
                         response.getWriter().println("Lo sentimos, no hay espacios disponibles en el estacionamiento.");
                     }
@@ -283,4 +301,6 @@ public class Estacionamiento extends HttpServlet {
             return "";
         }
     }
+    
+     
 }
