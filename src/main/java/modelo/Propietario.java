@@ -7,8 +7,17 @@ public class Propietario {
     private String numeroTelefono;
     private String matricula;
     private boolean estudiante;
+    private String contraseña;
 
-    public Propietario(String nombre, String numeroTelefono, String matricula, boolean estudiante, Direccion direccion) {
+    public String getContraseña() {
+		return contraseña;
+	}
+
+	public void setContraseña(String contraseña) {
+		this.contraseña = contraseña;
+	}
+
+	public Propietario(String nombre, String numeroTelefono, String matricula, boolean estudiante, Direccion direccion) {
         this.nombre = nombre;
         this.numeroTelefono = numeroTelefono;
         this.matricula = (estudiante) ? matricula : null;

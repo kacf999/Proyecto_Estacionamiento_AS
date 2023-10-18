@@ -1,10 +1,10 @@
 package control;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import almacen.ConexionBD;
 
@@ -13,7 +13,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @WebServlet("/SalidaEstacionamiento")
@@ -47,7 +49,7 @@ public class SalidaEstacionamiento extends HttpServlet {
                 int espacioEstacionado = obtenerEspacioEstacionamiento(matricula);
 
                 // Liberar el espacio de estacionamiento
-                liberarEspacioEstacionamiento(espacioEstacionado);
+                liberarEspacioEstacionamiento(espacioEstacionado, matricula, identificacion);
 
                 // Mostrar mensaje de agradecimiento y espacio liberado
                 response.getWriter().println("Muchas gracias por su visita.");
@@ -136,18 +138,36 @@ public class SalidaEstacionamiento extends HttpServlet {
         }
     }
 
-    private void liberarEspacioEstacionamiento(int espacioEstacionamiento) {
+    private void liberarEspacioEstacionamiento(int espacioEstacionamiento, String matricula, int identificacion) {
         try {
             // Establecer la conexión con la base de datos
             Connection connection = ConexionBD.obtenerConexion();
 
             // Liberar el espacio de estacionamiento
-            String query = "UPDATE espacio_estacionamiento SET estado = false, matricula = NULL WHERE numero = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, espacioEstacionamiento);
-            statement.executeUpdate();
+            String updateQuery = "UPDATE espacio_estacionamiento SET estado = false, matricula = NULL WHERE numero = ?";
+            PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+            updateStatement.setInt(1, espacioEstacionamiento);
+            updateStatement.executeUpdate();
+            updateStatement.close();
 
-            statement.close();
+            // Obtener el último id_notificacion
+            int ultimoId = obtenerUltimoIdNotificacion(connection);
+
+            // Obtener la hora actual y formatearla como "HH:MI"
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+            String horaActual = dateFormat.format(new Date());
+
+            // Insertar una nueva notificación en la tabla Notificacion
+            String insertQuery = "INSERT INTO notificaciones (id_notificacion, id_propietario, descripcion, fecha, hora, matricula_vehiculo, tipo) VALUES (?, ?, ?, CURRENT_DATE, ?, ?, 0)";
+            PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+            insertStatement.setInt(1, ultimoId+1); // Reemplaza 'identificacion' con el ID del propietario
+            insertStatement.setInt(2, identificacion); // Reemplaza 'identificacion' con el ID del propietario
+            insertStatement.setString(3, "Saliste del estacionamiento");
+            insertStatement.setString(4, horaActual); // Hora formateada
+            insertStatement.setString(5, matricula); // Usar la matrícula obtenida
+            insertStatement.executeUpdate();
+            insertStatement.close();
+
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -181,4 +201,27 @@ public class SalidaEstacionamiento extends HttpServlet {
 
         return vehiculos;
     }
+
+    private int obtenerUltimoIdNotificacion(Connection connection) {
+        try {
+            // Obtener el último id_notificacion
+            String query = "SELECT MAX(id_notificacion) FROM notificaciones";
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+
+            int ultimoId = 0;
+            if (resultSet.next()) {
+                ultimoId = resultSet.getInt(1);
+            }
+
+            resultSet.close();
+            statement.close();
+
+            return ultimoId;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    
 }

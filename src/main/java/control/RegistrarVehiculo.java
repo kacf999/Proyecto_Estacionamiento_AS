@@ -1,16 +1,16 @@
 package control;
 
-import java.io.*;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import modelo.Vehiculo;
 import almacen.ConexionBD;
@@ -96,13 +96,14 @@ public class RegistrarVehiculo extends HttpServlet {
         	Connection connection = ConexionBD.obtenerConexion();
 
             // Insertar el vehículo en la base de datos
-            String query = "INSERT INTO vehiculo (id_propietario, modelo, marca, color, matricula) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO vehiculo (id_propietario, modelo, marca, color, matricula, estacionado) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, vehiculo.getPropietario());
             statement.setString(2, vehiculo.getModelo());
             statement.setString(3, vehiculo.getMarca());
             statement.setString(4, vehiculo.getColor());
             statement.setString(5, vehiculo.getMatricula());
+            statement.setBoolean(6, false);
 
             int filasInsertadas = statement.executeUpdate();
             statement.close();
