@@ -1,4 +1,4 @@
- <%@ page import="modelo.Ticket" %>
+<%@ page import="modelo.Ticket" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <!DOCTYPE html>
@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <title>Estadísticas</title>
     <link rel="stylesheet" href="estilo.css">
-    <!--  Biblioteca Chart.js para insertar gráficos -->
+    <!-- Biblioteca Chart.js para insertar gráficos -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     <style>
         /* Estilo para ajustar el tamaño de la gráfica */
@@ -19,16 +19,16 @@
 </head>
 <body>
     <h1>Buscar Ticket</h1>
-    <!-- Tu formulario de búsqueda aquí -->
     <form action="EstadisticasTicket" method="post">
         <label>Matrícula del vehículo:</label>
         <input type="text" name="matricula">
         <br><br>
         <label>Fecha:</label>
-        <input type="date" name="fecha"> <!-- Campo de fecha -->
+        <input type="date" name="fechaInicio" placeholder="Fecha Inicial">
+        <input type="date" name="fechaFin" placeholder="Fecha Final">
         <br><br>
         <label>Hora:</label>
-        <input type="time" name="hora"> <!-- Campo de hora -->
+        <input type="time" name="hora">
         <br><br>
         <input type="submit" class="btn btn-primary btn-large" value="Buscar">
     </form>
@@ -38,66 +38,70 @@
         if (ticketsEncontrados) {
             List<Ticket> tickets = (List<Ticket>) request.getAttribute("tickets");
     %>
-<!--     
--->
-
-    <div>
-        <form action="menuPrincipal.jsp" method="post">
-            <input type="submit" class="btn btn-primary btn-large" value="Menu Principal">
-        </form>
-    </div>
     <h2>Gráfico de Estadísticas de Estacionamiento</h2>
-    <canvas id="miGrafico" height="1500"></canvas>
-<script>
-    var ticketsData = [];
-    var backgroundColors = [];
+    <canvas id="miGrafico" height="300"></canvas>
 
-    <% for (Ticket ticket : tickets) { %>
-        var ticketData = {
-            id: <%= ticket.getId() %>,
-            cajon: <%= ticket.getCajon() %>,
-            matriculaVehiculo: '<%= ticket.getMatriculaVehiculo() %>',
-            fecha: '<%= ticket.getFecha() %>',
-            hora: '<%= ticket.getHora() %>'
-        };
-        ticketsData.push(ticketData);
+    <script>
+        var ticketsData = [];
+        var backgroundColors = [];
 
-        // Generar un color aleatorio
-        var randomColor = 'rgba(' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ', 0.2)';
-        backgroundColors.push(randomColor);
-    <% } %>
+        <% for (Ticket ticket : tickets) { %>
+            var ticketData = {
+                id: <%= ticket.getId() %>,
+                cajon: <%= ticket.getCajon() %>,
+                matriculaVehiculo: '<%= ticket.getMatriculaVehiculo() %>',
+                fecha: '<%= ticket.getFecha() %>',
+                hora: '<%= ticket.getHora() %>'
+            };
+            ticketsData.push(ticketData);
 
-    var ctx = document.getElementById('miGrafico').getContext('2d');
-    var labels = ticketsData.map(function(ticket) {
-        return 'Cajón: ' + ticket.cajon +  '\n'  + ticket.fecha + ' | ' + ticket.hora + '\nMatrícula: ' + ticket.matriculaVehiculo;
-    });
-    var data = ticketsData.map(function(ticket) { return ticket.id; });
+            // Generar un color aleatorio
+            var randomColor = 'rgba(' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ', 0.2)';
+            backgroundColors.push(randomColor);
+        <% } %>
 
-    var myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'ID del ticket',
-                data: data,
-                backgroundColor: backgroundColors, // Utiliza los colores aleatorios
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1
+        var ctx = document.getElementById('miGrafico').getContext('2d');
+        var labels = ticketsData.map(function(ticket) {
+            return 'Cajón: ' + ticket.cajon + '\n' + ticket.fecha + ' | ' + ticket.hora + '\nMatrícula: ' + ticket.matriculaVehiculo;
+        });
+        var data = ticketsData.map(function(ticket) { return ticket.id; });
+
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'ID del ticket',
+                    data: data,
+                    backgroundColor: backgroundColors,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
                     }
                 }
             }
-        }
-    });
-</script>
-<h2>Tickets Encontrados</h2>
+        });
+    </script>
+
+    <%
+        // Agrega la lista de tickets como un atributo en la sesión
+        session.setAttribute("tickets", tickets);
+    %>
+
+    <form action="exportarExcel.jsp" method="get">
+        <input type="hidden" name="export" value="true">
+        <input type="submit" class="btn btn-primary" value="Exportar a Excel">
+    </form>
+
+    <h2>Tickets Encontrados</h2>
     <h1>Cantidad de Registros: <%= tickets.size() %> </h1>
     <div>
         <h3>Datos obtenidos por última visita:</h3>
@@ -111,10 +115,16 @@
             <% } %>
         </ul>
     </div>
-    <% }else { %>
+    <% } else { %>
     <h2>Sin resultados.</h2>
-    <% } } 
+    <% } }
     %>
 
-    </body>
+    <script>
+        function exportToExcel() {
+            // Redirigir al JSP de exportación
+            location.href = "exportarExcel.jsp?export=true";
+        }
+    </script>
+</body>
 </html>

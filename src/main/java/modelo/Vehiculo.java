@@ -15,7 +15,7 @@ public class Vehiculo {
         this.matricula = matricula;
     }
 
-    public int getPropietario() {
+	public int getPropietario() {
 		return propietario;
 	}
 
