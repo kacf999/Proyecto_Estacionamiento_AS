@@ -42,23 +42,11 @@ public class RegistrarPropietario extends HttpServlet {
         boolean exito = guardarPropietarioEnBD(propietario);
 
         if (exito) {
-            // Obtener el ID del nuevo registro
-            int idPropietario = obtenerIdPropietario(propietario);
-
-            // Crear una respuesta HTML con el mensaje de éxito y el botón de regresar
-            String responseHTML = "<html><body>";
-            responseHTML += "<p>Registro exitoso. ID del propietario: " + idPropietario + "</p>";            
-            responseHTML += "<link rel=\"stylesheet\" type=\"text/css\" href=\"estilo.css\">";     
-            responseHTML += "<button onclick=\"window.location.href='menuPrincipal.jsp'\">Regresar al Menú Principal</button>";
-            responseHTML += "</body></html>";
-
-            // Establecer el tipo de contenido de la respuesta como HTML
-            response.setContentType("text/html");
-            response.setCharacterEncoding("UTF-8");
-
-            // Enviar la respuesta HTML al navegador
-            response.getWriter().write(responseHTML);        
-            } else {
+        	int idPropietario = obtenerIdPropietario(propietario);
+        	propietario.setId(idPropietario);
+        	request.setAttribute("propietario", propietario);
+        	request.getRequestDispatcher("PropietarioRegistrado.jsp").forward(request, response);
+        } else {
                 // Crear una respuesta HTML con el mensaje de error y el botón de regresar
                 String responseHTML = "<html><body>";
                 responseHTML += "<link rel=\"stylesheet\" type=\"text/css\" href=\"estilo.css\">";     

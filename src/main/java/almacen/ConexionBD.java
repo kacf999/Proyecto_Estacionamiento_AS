@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConexionBD {
-    private static final String URL = "jdbc:postgresql://localhost:5432/RespaldoBase";
+    private static final String URL = "jdbc:postgresql://localhost:5432/SistemaEstacionamiento";
     private static final String USUARIO = "postgres";
     private static final String CONTRASEÑA = "2020";
 

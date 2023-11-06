@@ -48,7 +48,8 @@ public class RegistrarVehiculo extends HttpServlet {
             boolean exito = guardarVehiculoEnBD(vehiculo);
 
             if (exito) {
-                response.getWriter().println("Registro exitoso");
+                request.setAttribute("vehiculo", vehiculo);
+                request.getRequestDispatcher("VehiculoRegistrado.jsp").forward(request, response);
             } else {
                 response.getWriter().println("Error al registrar el vehículo");
             }

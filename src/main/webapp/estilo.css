@@ -2,9 +2,10 @@
 
 
 body{
-	background-color: #D4D8DA  ;
 	background-image: url('/imagenes/logo.png');
+	background-color: #D4D8DA  ;
     background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 

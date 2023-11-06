@@ -5,7 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import modelo.EspacioEstacionamiento;
 import almacen.ConexionBD;
 
 import java.io.IOException;
@@ -48,10 +48,12 @@ public class SalidaEstacionamiento extends HttpServlet {
 
                 // Liberar el espacio de estacionamiento
                 liberarEspacioEstacionamiento(espacioEstacionado);
+                
+                EspacioEstacionamiento espacioEstacionamiento = new EspacioEstacionamiento(espacioEstacionado, true, matricula);
 
                 // Mostrar mensaje de agradecimiento y espacio liberado
-                response.getWriter().println("Muchas gracias por su visita.");
-                response.getWriter().println("El cajón " + espacioEstacionado + " ha sido liberado.");
+                request.setAttribute("espacioEstacionamiento", espacioEstacionamiento);
+            	request.getRequestDispatcher("EspacioLiberado.jsp").forward(request, response);
             } else {
                 response.getWriter().println("El vehículo no está estacionado en el estacionamiento.");
             }

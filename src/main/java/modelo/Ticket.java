@@ -6,13 +6,15 @@ public class Ticket {
     private String matriculaVehiculo;
     private String fecha;
     private String hora;
+    private String ruta;
 
-    public Ticket(int id, int cajon, String matriculaVehiculo, String fecha, String hora) {
+    public Ticket(int id, int cajon, String matriculaVehiculo, String fecha, String hora, String ruta) {
         this.id = id;
         this.cajon = cajon;
         this.matriculaVehiculo = matriculaVehiculo;
         this.fecha = fecha;
         this.hora = hora;
+        this.ruta = ruta;
     }
 
     public int getId() {
@@ -54,8 +56,17 @@ public class Ticket {
     public void setHora(String hora) {
         this.hora = hora;
     }
+    
 
-    @Override
+    public String getRuta() {
+		return ruta;
+	}
+
+	public void setRuta(String ruta) {
+		this.ruta = ruta;
+	}
+
+	@Override
     public String toString() {
         return "Ticket{" +
                 "id=" + id +
@@ -65,4 +76,13 @@ public class Ticket {
                 ", hora='" + hora + '\'' +
                 '}';
     }
+	
+	public String RutaRecortada() {
+		String rutaRecortada = ruta.substring(77);
+		return rutaRecortada;
+	}
+	
+	public String getRutaRecortada() {
+		return RutaRecortada();
+	}
 }

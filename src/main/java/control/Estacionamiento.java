@@ -1,6 +1,6 @@
 package control;
 import modelo.CodigoQR;
-
+import modelo.Ticket;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.annotation.WebServlet;
@@ -61,17 +61,10 @@ public class Estacionamiento extends HttpServlet {
                     	
                     	String ruta = codigoQR.getNombreArchivo();
                         
+                    	Ticket ticket = new Ticket(id_propietario, espacio, matricula, fechaEmision, horaEmision, ruta);
 
-                        
-
-                        // Mostrar mensaje y datos del ticket al usuario
-                        response.getWriter().println("Su vehículo se ha asignado al espacio " + espacio + " del estacionamiento.");
-                        response.getWriter().println("ID del propietario " + id_propietario + ", datos del ticket:");
-                        response.getWriter().println("Fecha de emisión: " + fechaEmision);
-                        response.getWriter().println("Hora de emisión: " + horaEmision);
-                        response.getWriter().println("Matrícula registrada: " + matricula);
-                        
-                        response.getWriter().println("Su iamgen de codigo qr es: "+ruta);
+                    	request.setAttribute("ticket", ticket);
+                    	request.getRequestDispatcher("MostrarTicket.jsp").forward(request, response);
                     } else {
                         response.getWriter().println("Lo sentimos, no hay espacios disponibles en el estacionamiento.");
                     }
