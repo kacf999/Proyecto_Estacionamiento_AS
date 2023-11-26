@@ -16,6 +16,18 @@ public class Ticket {
         this.hora = hora;
         this.ruta = ruta;
     }
+    
+    public Ticket(int id, int cajon, String matriculaVehiculo, String fecha, String hora) {
+    	this.id = id;
+        this.cajon = cajon;
+        this.matriculaVehiculo = matriculaVehiculo;
+        this.fecha = fecha;
+        this.hora = hora;
+    }
+    
+    public Ticket() {
+    	
+    }
 
     public int getId() {
         return id;

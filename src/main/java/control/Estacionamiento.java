@@ -1,5 +1,6 @@
 package control;
 import modelo.CodigoQR;
+import modelo.TiempoTicket;
 import modelo.Ticket;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
@@ -16,6 +17,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet("/Estacionamiento")
 public class Estacionamiento extends HttpServlet {
@@ -44,16 +47,20 @@ public class Estacionamiento extends HttpServlet {
                         // Asignar el espacio al usuario y guardar la matrícula en la base de datos
                         asignarEspacioUsuario(id_propietario, matricula, espacio);
 
-                        // Generar ticket y guardar en la base de datos
-                        generarTicket(espacio, matricula);
+                        
 
                         // Obtener los datos del ticket
-                        String fechaEmision = obtenerFechaEmisionTicket(matricula);
-                        String horaEmision = obtenerHoraEmisionTicket(matricula);
+                        //String fechaEmision = obtenerFechaEmisionTicket(matricula);
+                        //String horaEmision = obtenerHoraEmisionTicket(matricula);
+                        TiempoTicket tiempo = new TiempoTicket();                 
+                        String fechaEmision = tiempo.ObtenerFecha();
+                        String horaEmision = tiempo.ObtenerHora();
                         
                         String informacion = "Propietario ID: "+id_propietario+
                         				"\nMatricula: "+matricula+
-                        				 "\nEspacio Asignado "+espacio;
+                        				 "\nEspacio Asignado "+espacio+
+                        				 "\nFecha: "+fechaEmision+
+                        				 "\nHora: "+horaEmision;
                      
                         System.out.println(informacion);
                         CodigoQR codigoQR = new CodigoQR(informacion);
@@ -62,6 +69,9 @@ public class Estacionamiento extends HttpServlet {
                     	String ruta = codigoQR.getNombreArchivo();
                         
                     	Ticket ticket = new Ticket(id_propietario, espacio, matricula, fechaEmision, horaEmision, ruta);
+                    	
+                    	// Generar ticket y guardar en la base de datos
+                        generarTicket(espacio, matricula, id_propietario, horaEmision, fechaEmision);
 
                     	request.setAttribute("ticket", ticket);
                     	request.getRequestDispatcher("MostrarTicket.jsp").forward(request, response);
@@ -222,78 +232,28 @@ public class Estacionamiento extends HttpServlet {
         }
     }
 
-    private void generarTicket(int espacio, String matricula) {
+    private void generarTicket(int espacio, String matricula, int id_propietario, String hora, String fecha) {
         try {
             // Establecer la conexión con la base de datos
             Connection connection = ConexionBD.obtenerConexion();
-
+            
             // Generar ticket y guardar en la base de datos
-            String query = "INSERT INTO ticket (id_espacio_estacionamiento, matricula_vehiculo, fecha_emision, hora) VALUES (?, ?, CURRENT_DATE, CURRENT_TIME)";
+            String query = "INSERT INTO ticket Values(?,?,?,?,?)";
+            
+            int id = espacio + id_propietario + Integer.valueOf(hora.substring(3));
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, espacio);
-            statement.setString(2, matricula);
-            statement.executeUpdate();
+            statement.setInt(1, id);
+            statement.setInt(2, espacio);
+            statement.setString(3, matricula);
+            statement.setString(4, hora);
+            statement.setString(5, fecha);
+            statement.executeQuery();
 
             statement.close();
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-    private String obtenerFechaEmisionTicket(String matricula) {
-        try {
-            // Establecer la conexión con la base de datos
-            Connection connection = ConexionBD.obtenerConexion();
-
-            // Obtener la fecha de emisión del ticket
-            String query = "SELECT fecha_emision FROM ticket WHERE matricula_vehiculo = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, matricula);
-            ResultSet resultSet = statement.executeQuery();
-
-            String fechaEmision = "";
-            if (resultSet.next()) {
-                fechaEmision = resultSet.getString("fecha_emision");
-            }
-
-            resultSet.close();
-            statement.close();
-            connection.close();
-
-            return fechaEmision;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
-    private String obtenerHoraEmisionTicket(String matricula) {
-        try {
-            // Establecer la conexión con la base de datos
-            Connection connection = ConexionBD.obtenerConexion();
-
-            // Obtener la hora de emisión del ticket
-            String query = "SELECT hora FROM ticket WHERE matricula_vehiculo = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, matricula);
-            ResultSet resultSet = statement.executeQuery();
-
-            String horaEmision = "";
-            if (resultSet.next()) {
-                horaEmision = resultSet.getString("hora");
-            }
-
-            resultSet.close();
-            statement.close();
-            connection.close();
-
-            return horaEmision;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return "";
         }
     }
     
-     
 }

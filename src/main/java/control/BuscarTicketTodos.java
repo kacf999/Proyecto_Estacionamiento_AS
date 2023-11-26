@@ -45,7 +45,7 @@ public class BuscarTicketTodos extends HttpServlet {
             Connection connection = ConexionBD.obtenerConexion();
 
             // Construir la consulta SQL para buscar los tickets
-            String query = "SELECT * FROM ticket ORDER BY fecha_emision DESC, hora DESC";
+            String query = "SELECT * FROM ticket";
             PreparedStatement statement = connection.prepareStatement(query);
 
             // Ejecutar la consulta
@@ -55,9 +55,9 @@ public class BuscarTicketTodos extends HttpServlet {
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 int cajon = resultSet.getInt("id_espacio_estacionamiento");
-                String matricula = resultSet.getString("matricula_vehiculo");
-                String fecha = resultSet.getString("fecha_emision");
+                String matricula = resultSet.getString("matricula_vehiculo");     
                 String hora = resultSet.getString("hora");
+                String fecha = resultSet.getString("fecha");
 
                 Ticket ticket = new Ticket(id, cajon, matricula, fecha, hora);
                 tickets.add(ticket);

@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import modelo.EspacioEstacionamiento;
+import modelo.Ticket;
 import almacen.ConexionBD;
 
 import java.io.IOException;
@@ -49,10 +50,11 @@ public class SalidaEstacionamiento extends HttpServlet {
                 // Liberar el espacio de estacionamiento
                 liberarEspacioEstacionamiento(espacioEstacionado);
                 
-                EspacioEstacionamiento espacioEstacionamiento = new EspacioEstacionamiento(espacioEstacionado, true, matricula);
+                Ticket ticket = buscarTicketEnBD(matricula);
+                System.out.println(matricula);
 
                 // Mostrar mensaje de agradecimiento y espacio liberado
-                request.setAttribute("espacioEstacionamiento", espacioEstacionamiento);
+                request.setAttribute("ticket", ticket);
             	request.getRequestDispatcher("EspacioLiberado.jsp").forward(request, response);
             } else {
                 response.getWriter().println("El vehículo no está estacionado en el estacionamiento.");
@@ -183,4 +185,43 @@ public class SalidaEstacionamiento extends HttpServlet {
 
         return vehiculos;
     }
+    
+    private Ticket buscarTicketEnBD(String matriculaVehiculo) {
+    	Ticket ticket = new Ticket();
+        try {
+            // Establecer la conexión con la base de datos
+            Connection connection = ConexionBD.obtenerConexion();
+
+            // Construir la consulta SQL para buscar los tickets
+            String query = "SELECT * FROM ticket WHERE matricula_vehiculo = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, matriculaVehiculo);      
+
+            // Ejecutar la consulta
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+            	// Recorrer los resultados y construir los objetos Ticket
+                int id = resultSet.getInt("id");
+                int cajon = resultSet.getInt("id_espacio_estacionamiento");
+                String matricula = resultSet.getString("matricula_vehiculo");     
+                String hora = resultSet.getString("hora");
+                String fecha = resultSet.getString("fecha");
+
+                ticket.setId(id);
+                ticket.setCajon(cajon);
+                ticket.setMatriculaVehiculo(matricula);
+                ticket.setHora(hora);
+                ticket.setFecha(fecha);
+            }
+
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return ticket;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+         return ticket;
+        }
 }

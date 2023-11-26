@@ -8,14 +8,19 @@
 	<link rel="stylesheet" href="estilo.css">
 </head>
 <body>
-	<%@ page import="modelo.EspacioEstacionamiento" %>
+	<%@ page import="modelo.Ticket" %>
+	<%@ page import="modelo.CobroEstacionamiento" %>
 	<%
-		EspacioEstacionamiento espacioEstacionamiento = (EspacioEstacionamiento) request.getAttribute("espacioEstacionamiento");
+		Ticket ticket = (Ticket) request.getAttribute("ticket");
+		CobroEstacionamiento cobro = new CobroEstacionamiento(ticket);
 	%>
 	
 	<h1>Espacio Estacionamiento Liberado</h1>
-	<p>Numero de cajon: <%=espacioEstacionamiento.getNumero()%></p>
-	<p>Matricula vehiculo: <%=espacioEstacionamiento.getMatricula() %></p>
+	<p>Numero de cajon: <%=ticket.getCajon()%></p>
+	<p>Matricula vehiculo: <%=ticket.getMatriculaVehiculo() %></p>
+	<p>Fecha de ingreso: <%=ticket.getFecha() %></p>
+	<p>Hora de ingreso: <%=ticket.getHora() %></p>
+	<p>Tarifa de cobro: <%=cobro.calcularTarifa()%>
 
 	<div>
 	    <form action="menuPrincipal.jsp" method="post">
