@@ -27,7 +27,7 @@ public class CobroEstacionamiento {
 		
 		String tarifaPago = "Se deben pagar: "+tarifa;
 		
-		if(reglas.VerificarReglas() == false) {
+		if(reglas.VerificarReglas() == true) {
 			tarifaPago = "Existe un problema, ha incumplido con las reglas del estacionamiento";
 		}
 		
