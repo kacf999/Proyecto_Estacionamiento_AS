@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Build-Jdk-Spec: 17
+Specification-Title: Apache Commons Codec
+Specification-Version: 1.16
+Specification-Vendor: The Apache Software Foundation
+Implementation-Title: Apache Commons Codec
+Implementation-Version: 1.16.0
+Implementation-Vendor: The Apache Software Foundation
+Automatic-Module-Name: org.apache.commons.codec
+Created-By: Apache Maven Bundle Plugin 5.1.8
+Bundle-Description: The Apache Commons Codec package contains simple enc
+ oder and decoders for     various formats such as Base64 and Hexadecima
+ l.  In addition to these     widely used encoders and decoders, the cod
+ ec package also maintains a     collection of phonetic encoding utiliti
+ es.
+Bundle-DocURL: https://commons.apache.org/proper/commons-codec/
+Bundle-License: https://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: Apache Commons Codec
+Bundle-SymbolicName: org.apache.commons.commons-codec
+Bundle-Vendor: The Apache Software Foundation
+Bundle-Version: 1.16.0
+Originally-Created-By: Maven Integration for Eclipse
+Tool: Bnd-6.4.0.202211291949
+

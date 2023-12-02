@@ -1,0 +1,45 @@
+
+*****************************************************
+Summary
+-------
+Generated at: 2023-11-05T21:17:40-06:00
+
+Notes: 0
+Binaries: 0
+Archives: 0
+Standards: 2
+
+Apache Licensed: 1
+Generated Documents: 0
+
+JavaDocs are generated, thus a license header is optional.
+Generated files do not require license headers.
+
+1 Unknown Licenses
+
+*****************************************************
+
+Files with unapproved licenses:
+
+  C:/Users/Giovanni/Desktop/WEB PROGRAMACION/Proyecto_Sistema_Estacionamiento/src/main/webapp/WEB-INF/lib/META-INF/maven/commons-codec/commons-codec/pom.properties
+
+*****************************************************
+
+*****************************************************
+  Files with Apache License headers will be marked AL
+  Binary files (which do not require any license headers) will be marked B
+  Compressed archives will be marked A
+  Notices, licenses etc. will be marked N
+ !????? C:/Users/Giovanni/Desktop/WEB PROGRAMACION/Proyecto_Sistema_Estacionamiento/src/main/webapp/WEB-INF/lib/META-INF/maven/commons-codec/commons-codec/pom.properties
+  AL    C:/Users/Giovanni/Desktop/WEB PROGRAMACION/Proyecto_Sistema_Estacionamiento/src/main/webapp/WEB-INF/lib/META-INF/maven/commons-codec/commons-codec/pom.xml
+ 
+*****************************************************
+
+ Printing headers for text files without a valid license header...
+ 
+=====================================================
+== File: C:/Users/Giovanni/Desktop/WEB PROGRAMACION/Proyecto_Sistema_Estacionamiento/src/main/webapp/WEB-INF/lib/META-INF/maven/commons-codec/commons-codec/pom.properties
+=====================================================
+artifactId=commons-codec
+groupId=commons-codec
+version=1.16.0
