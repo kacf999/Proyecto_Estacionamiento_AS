@@ -1,13 +1,5 @@
 package control;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import almacen.ConexionBD;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,11 +8,20 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import almacen.ConexionBD;
+
 @WebServlet("/Estacionamiento")
 public class Estacionamiento extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Obtener los datos del formulario
         int id_propietario = Integer.parseInt(request.getParameter("id_propietario"));
         String matricula = request.getParameter("matricula");
@@ -325,7 +326,7 @@ public class Estacionamiento extends HttpServlet {
             e.printStackTrace();
         }
     }
-    
+
     private int obtenerUltimoIdNotificacion(Connection connection) {
         try {
             // Obtener el último id_notificacion
@@ -347,5 +348,5 @@ public class Estacionamiento extends HttpServlet {
             return 0;
         }
     }
-    
+
 }

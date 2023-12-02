@@ -85,5 +85,5 @@ public class Propietario {
 		this.id = id;
 	}
 
-	
+
 }

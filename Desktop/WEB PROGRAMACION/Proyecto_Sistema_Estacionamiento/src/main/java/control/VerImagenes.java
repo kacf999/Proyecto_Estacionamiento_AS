@@ -7,12 +7,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.codec.binary.Base64; 
+
+import org.apache.commons.codec.binary.Base64;
 
 import almacen.ConexionBD;
 import modelo.Camara;
@@ -25,7 +27,8 @@ public class VerImagenes extends HttpServlet {
         super();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ArrayList<Camara> imagenes = new ArrayList<>();
         ArrayList<String> imagenesBase64 = new ArrayList<>(); // Lista de representaciones Base64 de imágenes
 

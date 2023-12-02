@@ -9,14 +9,24 @@ public class Notificacion {
     private String hora;
     private String matriculaVehiculo;
     private int tipo;
+    private int id;
 
-    public Notificacion(int idPropietario, String descripcion, LocalDate fecha, String hora, String matriculaVehiculo, int tipo) {
+    public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Notificacion(int idPropietario, String descripcion, LocalDate fecha, String hora, String matriculaVehiculo, int tipo) {
         this.idPropietario = idPropietario;
         this.descripcion = descripcion;
         this.fecha = fecha;
         this.hora = hora;
         this.matriculaVehiculo = matriculaVehiculo;
         this.tipo = tipo;
+        this.id = id;
     }
 
     public int getIdPropietario() {

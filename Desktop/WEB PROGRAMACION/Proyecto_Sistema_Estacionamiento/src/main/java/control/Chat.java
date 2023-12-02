@@ -15,83 +15,165 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import almacen.ConexionBD;
 
 @WebServlet("/Chat")
 public class Chat extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try (Connection connection = ConexionBD.obtenerConexion()) {
-            String sql = "SELECT c.mensaje, c.fecha, p.nombre AS usuario FROM chat c " +
-                         "INNER JOIN propietario p ON c.propietario_id = p.id " +
-                         "ORDER BY c.fecha DESC";
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		try (Connection connection = ConexionBD.obtenerConexion()) {
+			String sql = "SELECT c.id, c.mensaje, c.fecha, c.estado, p.nombre AS usuario FROM chat c "
+					+ "INNER JOIN propietario p ON c.propietario_id = p.id " + "ORDER BY c.fecha DESC";
 
-            PreparedStatement statement = connection.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery();
+			PreparedStatement statement = connection.prepareStatement(sql);
+			ResultSet resultSet = statement.executeQuery();
 
-            StringBuilder chatMessages = new StringBuilder();
-            chatMessages.append("["); // Inicio del array JSON
+			StringBuilder chatMessages = new StringBuilder();
+			chatMessages.append("["); // Inicio del array JSON
 
-            boolean first = true;
-            while (resultSet.next()) {
-                if (!first) {
-                    chatMessages.append(",");
-                } else {
-                    first = false;
-                }
+			boolean first = true;
+			while (resultSet.next()) {
+				if (!first) {
+					chatMessages.append(",");
+				} else {
+					first = false;
+				}
 
-                String usuario = resultSet.getString("usuario");
-                String mensaje = resultSet.getString("mensaje");
-                Timestamp fecha = resultSet.getTimestamp("fecha");
+				int messageId = resultSet.getInt("id");
+				String usuario = resultSet.getString("usuario");
+				String mensaje = resultSet.getString("mensaje");
+				Timestamp fecha = resultSet.getTimestamp("fecha");
+				int estado = resultSet.getInt("estado");
 
-                chatMessages.append("{");
-                chatMessages.append("\"usuario\":\"" + usuario + "\",");
-                chatMessages.append("\"mensaje\":\"" + mensaje + "\",");
-                chatMessages.append("\"fecha\":\"" + fecha + "\"");
-                chatMessages.append("}");
-            }
+				chatMessages.append("{");
+				chatMessages.append("\"id\":\"" + messageId + "\",");
+				chatMessages.append("\"usuario\":\"" + usuario + "\",");
+				chatMessages.append("\"mensaje\":\"" + mensaje + "\",");
+				chatMessages.append("\"fecha\":\"" + fecha + "\",");
+				chatMessages.append("\"estado\":\"" + estado + "\"");
+				chatMessages.append("}");
+			}
 
-            chatMessages.append("]"); // Fin del array JSON
+			chatMessages.append("]"); // Fin del array JSON
 
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(chatMessages.toString());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-    }
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(chatMessages.toString());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+	}
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try (Connection connection = ConexionBD.obtenerConexion()) {
-            String mensaje = request.getParameter("mensaje");
-            HttpSession sesion = request.getSession();
-            Integer propietarioId = (Integer) sesion.getAttribute("propietarioId");
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		try (Connection connection = ConexionBD.obtenerConexion()) {
+			String mensaje = request.getParameter("mensaje");
+			String accion = request.getParameter("accion");
 
-            // Obtener la fecha actual en el formato deseado
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-            Date date = new Date();
-            String fechaFormateada = dateFormat.format(date);
+			// Check if mensajeId parameter is null
+			String mensajeIdParam = request.getParameter("mensajeId");
+			int mensajeId = (mensajeIdParam != null && !mensajeIdParam.isEmpty()) ? Integer.parseInt(mensajeIdParam)
+					: 0;
 
-            System.out.println(propietarioId + " envió mensaje: " + mensaje);
-            String sql = "INSERT INTO chat (propietario_id, mensaje, fecha) VALUES (?, ?, ?::timestamp)";
-            PreparedStatement statement = connection.prepareStatement(sql);
+			HttpSession sesion = request.getSession();
+			Integer propietarioId = (Integer) sesion.getAttribute("propietarioId");
 
-            if (propietarioId != null) {
-                statement.setInt(1, propietarioId);
-            } else {
-                statement.setNull(1, 0);
-            }
+			// Obtener la fecha actual en el formato deseado
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+			Date date = new Date();
+			String fechaFormateada = dateFormat.format(date);
 
-            statement.setString(2, mensaje);
-            statement.setString(3, fechaFormateada); // Asignar la fecha formateada
+			if ("borrar".equals(accion)) {
+				borrarMensaje(connection, mensajeId);
+			} else if ("ocultar".equals(accion)) {
+				ocultarMensaje(connection, mensajeId);
+			} else if ("mostrar".equals(accion)) {
+				mostrarMensaje(connection, mensajeId);
+			} else if ("reportar".equals(accion)) {
+				reportarMensaje(connection, mensajeId);
+			} else if ("quitar-reporte".equals(accion)) {
+				quitarReporteMensaje(connection, mensajeId);
+			} else {
+				System.out.println("El usuario con ID " + propietarioId + " envió un mensaje: '" + mensaje
+						+ "' | Fecha: " + fechaFormateada);
+				String sql = "INSERT INTO chat (propietario_id, mensaje, fecha, estado) VALUES (?, ?, ?::timestamp, 0)";
+				PreparedStatement statement = connection.prepareStatement(sql);
 
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-    }
+				if (propietarioId != null) {
+					statement.setInt(1, propietarioId);
+				} else {
+					statement.setNull(1, 0);
+				}
+
+				statement.setString(2, mensaje);
+				statement.setString(3, fechaFormateada); // Asignar la fecha formateada
+
+				statement.executeUpdate();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid mensajeId format");
+		}
+	}
+
+	private void borrarMensaje(Connection connection, int messageId) throws SQLException {
+		System.out.println("Se ha borrado un mensaje de id: " + messageId);
+		String sql = "DELETE FROM chat WHERE id = ?";
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, messageId);
+			statement.executeUpdate();
+		}
+
+	}
+
+	private void mostrarMensaje(Connection connection, int messageId) throws SQLException {
+		System.out.println("Se ha mostrado un mensaje de id: " + messageId);
+		String sql = "UPDATE chat SET estado = 0 WHERE id = ?";
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, messageId);
+			statement.executeUpdate();
+		}
+
+	}
+
+	private void ocultarMensaje(Connection connection, int messageId) throws SQLException {
+		System.out.println("Se ha ocultado un mensaje de id: " + messageId);
+		String sql = "UPDATE chat SET estado = 1 WHERE id = ?";
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, messageId);
+			statement.executeUpdate();
+		}
+
+	}
+
+	private void reportarMensaje(Connection connection, int messageId) throws SQLException {
+		System.out.println("Se ha reportado un mensaje de id: " + messageId);
+		String sql = "UPDATE chat SET estado = 2 WHERE id = ?";
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, messageId);
+			statement.executeUpdate();
+		}
+
+	}
+
+	private void quitarReporteMensaje(Connection connection, int messageId) throws SQLException {
+		System.out.println("Se ha quitado el reporte de un mensaje de id: " + messageId);
+		String sql = "UPDATE chat SET estado = 0 WHERE id = ?";
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, messageId);
+			statement.executeUpdate();
+		}
+
+	}
+
 }

@@ -1,7 +1,5 @@
 package control;
 
-import modelo.Ticket;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -12,16 +10,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import modelo.Ticket;
 
 @WebServlet("/ExportarExcel")
 public class ExportarExcel extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Obtiene la lista real de registros desde el JSP
         List<Ticket> registros = (List<Ticket>) request.getAttribute("tickets");
 

@@ -24,7 +24,7 @@ public class Camara {
         this.matricula = matricula;
         this.foto = foto;
     }
-    
+
 	public Date getFecha() {
 		return fecha;
 	}
@@ -54,7 +54,7 @@ public class Camara {
     public void setImagenBase64(String imagenBase64) {
         this.imagenBase64 = imagenBase64;
     }
-    
+
 	public void setFoto(byte[] foto) {
 		this.foto = foto;
 	}

@@ -12,20 +12,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import modelo.Vehiculo;
 import almacen.ConexionBD;
+import modelo.Vehiculo;
 
 @WebServlet("/RegistrarVehiculo")
 public class RegistrarVehiculo extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int propietario = Integer.parseInt(request.getParameter("propietario"));
         String modelo = request.getParameter("modelo");
         String marca = request.getParameter("marca");
         String color = request.getParameter("color");
         String matricula = request.getParameter("matricula");
-        
+
         // Validar y procesar los datos recibidos
         if (propietario > 0 && modelo != null && !modelo.isEmpty()
                 && marca != null && !marca.isEmpty() && color != null && !color.isEmpty()
@@ -36,7 +37,7 @@ public class RegistrarVehiculo extends HttpServlet {
                 return;
             }
         }
-        
+
         // Validar y procesar los datos recibidos
         if (propietario > 0 && modelo != null && !modelo.isEmpty()
                 && marca != null && !marca.isEmpty() && color != null && !color.isEmpty()
@@ -56,9 +57,9 @@ public class RegistrarVehiculo extends HttpServlet {
             response.getWriter().println("Todos los campos son requeridos");
         }
     }
-    
+
     private boolean verificarLimiteVehiculos(int propietario) {
-    	
+
         try {
             // Establecer la conexión con la base de datos
         	Connection connection = ConexionBD.obtenerConexion();

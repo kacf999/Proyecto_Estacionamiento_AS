@@ -6,8 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import modelo.Camara;
+
 import almacen.ConexionBD;
+import modelo.Camara;
 
 public class GuardarFotografia {
 
@@ -33,7 +34,7 @@ public class GuardarFotografia {
         String sql = "select fecha, matricula, foto from fotos";
         ResultSet rs = null;
         Camara datos = null;
-        ArrayList<Camara> ingresar = new ArrayList<Camara>();
+        ArrayList<Camara> ingresar = new ArrayList<>();
 
         PreparedStatement pst;
         try {

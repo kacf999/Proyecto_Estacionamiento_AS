@@ -18,7 +18,8 @@ import almacen.ConexionBD;
 public class EliminarVehiculo extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    @Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Obtener los datos del formulario
         String matricula = request.getParameter("matricula");

@@ -1,5 +1,13 @@
 package control;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,19 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 import almacen.ConexionBD;
 import modelo.Ticket;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 @WebServlet("/EstadisticasTicket")
 public class EstadisticasTicket extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Obtener los datos del formulario
         String matricula = request.getParameter("matricula");
         String fechaInicio = request.getParameter("fechaInicio");
@@ -59,32 +60,32 @@ public class EstadisticasTicket extends HttpServlet {
 
             // Construir la consulta SQL para buscar los tickets con filtros opcionales
             String query = "SELECT COUNT(*) AS cantidad FROM ticket WHERE 1=1";
-            
+
             if (!matricula.isEmpty()) {
                 query += " AND matricula_vehiculo = ?";
             }
-            
+
             if (!fechaInicio.isEmpty() && !fechaFin.isEmpty()) {
                 query += " AND fecha_emision BETWEEN TO_DATE(?, 'YYYY-MM-DD') AND TO_DATE(?, 'YYYY-MM-DD')";
             }
-            
+
             if (!hora.isEmpty()) {
                 query += " AND hora = CAST(? AS time)";
             }
-            
+
             PreparedStatement statement = connection.prepareStatement(query);
-            
+
             int parameterIndex = 1; // Índice de parámetros
-            
+
             if (!matricula.isEmpty()) {
                 statement.setString(parameterIndex++, matricula);
             }
-            
+
             if (!fechaInicio.isEmpty() && !fechaFin.isEmpty()) {
                 statement.setString(parameterIndex++, fechaInicio);
                 statement.setString(parameterIndex++, fechaFin);
             }
-            
+
             if (!hora.isEmpty()) {
                 statement.setString(parameterIndex, hora);
             }
@@ -116,34 +117,34 @@ public class EstadisticasTicket extends HttpServlet {
 
             // Construir la consulta SQL para buscar los tickets con filtros opcionales
             String query = "SELECT * FROM ticket WHERE 1=1";
-            
+
             if (!matricula.isEmpty()) {
                 query += " AND matricula_vehiculo = ?";
             }
-            
+
             if (!fechaInicio.isEmpty() && !fechaFin.isEmpty()) {
                 query += " AND fecha_emision BETWEEN TO_DATE(?, 'YYYY-MM-DD') AND TO_DATE(?, 'YYYY-MM-DD')";
             }
-            
+
             if (!hora.isEmpty()) {
                 query += " AND hora = CAST(? AS time)";
             }
-            
+
             query += " ORDER BY fecha_emision DESC, hora DESC";
-            
+
             PreparedStatement statement = connection.prepareStatement(query);
-            
+
             int parameterIndex = 1; // Índice de parámetros
-            
+
             if (!matricula.isEmpty()) {
                 statement.setString(parameterIndex++, matricula);
             }
-            
+
             if (!fechaInicio.isEmpty() && !fechaFin.isEmpty()) {
                 statement.setString(parameterIndex++, fechaInicio);
                 statement.setString(parameterIndex++, fechaFin);
             }
-            
+
             if (!hora.isEmpty()) {
                 statement.setString(parameterIndex, hora);
             }

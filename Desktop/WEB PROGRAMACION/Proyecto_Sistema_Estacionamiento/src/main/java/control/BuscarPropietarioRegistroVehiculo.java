@@ -19,7 +19,8 @@ import modelo.Propietario;
 public class BuscarPropietarioRegistroVehiculo extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    @Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Obtener el identificador de búsqueda (ID)
         int identificador = Integer.parseInt(request.getParameter("identificador"));

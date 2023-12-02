@@ -1,6 +1,8 @@
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
+
 import modelo.Ticket;
 
 class TicketPruebas {
@@ -35,7 +37,7 @@ class TicketPruebas {
         });
     }
 
-    
+
     @Test
     void testSetHora_ValidaHoraExitosa() {
         Ticket ticket = new Ticket(1, 1, "", "", "");

@@ -18,7 +18,8 @@ import almacen.ConexionBD;
 public class EliminarPropietario extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    @Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Obtener los datos del formulario
         String id = request.getParameter("id");
@@ -77,8 +78,8 @@ public class EliminarPropietario extends HttpServlet {
 
                 // Crear una respuesta HTML con el mensaje de éxito y el botón de regresar
                 String responseHTML = "<html><body>";
-                responseHTML += "<p>Propietario y vehículos relacionados eliminados exitosamente</p>";            
-                responseHTML += "<link rel=\"stylesheet\" type=\"text/css\" href=\"estilo.css\">";     
+                responseHTML += "<p>Propietario y vehículos relacionados eliminados exitosamente</p>";
+                responseHTML += "<link rel=\"stylesheet\" type=\"text/css\" href=\"estilo.css\">";
                 responseHTML += "<button onclick=\"window.location.href='menuPrincipal.jsp'\">Regresar al Menú Principal</button>";
                 responseHTML += "</body></html>";
 
@@ -87,7 +88,7 @@ public class EliminarPropietario extends HttpServlet {
                 response.setCharacterEncoding("UTF-8");
 
                 // Enviar la respuesta HTML al navegador
-                response.getWriter().write(responseHTML);        
+                response.getWriter().write(responseHTML);
 
                 vehiculoResultSet.close();
                 vehiculoStatement.close();
@@ -95,8 +96,8 @@ public class EliminarPropietario extends HttpServlet {
                 // Mostrar alerta si no se encuentra el propietario con el ID proporcionado
                 // Crear una respuesta HTML con el mensaje de éxito y el botón de regresar
                 String responseHTML = "<html><body>";
-                responseHTML += "<p>No se encontró al propietario.</p>";            
-                responseHTML += "<link rel=\"stylesheet\" type=\"text/css\" href=\"estilo.css\">";     
+                responseHTML += "<p>No se encontró al propietario.</p>";
+                responseHTML += "<link rel=\"stylesheet\" type=\"text/css\" href=\"estilo.css\">";
                 responseHTML += "<button onclick=\"window.location.href='menuPrincipal.jsp'\">Regresar al Menú Principal</button>";
                 responseHTML += "</body></html>";
 
@@ -105,7 +106,7 @@ public class EliminarPropietario extends HttpServlet {
                 response.setCharacterEncoding("UTF-8");
 
                 // Enviar la respuesta HTML al navegador
-                response.getWriter().write(responseHTML);        
+                response.getWriter().write(responseHTML);
             }
 
             resultSet.close();

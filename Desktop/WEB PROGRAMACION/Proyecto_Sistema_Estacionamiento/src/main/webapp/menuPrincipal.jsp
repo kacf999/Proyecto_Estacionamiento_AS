@@ -36,6 +36,9 @@
     <form action="gestionarVehiculo.jsp" method="post">
         <input type="submit" class="btn btn-primary btn-large" value="Gestionar Vehículo">
     </form>
+    <form action="gestionarNotificaciones.jsp" method="post">
+        <input type="submit" class="btn btn-primary btn-large" value="Gestionar Notificaciones">
+    </form>
     <form action="estacionamiento.jsp" method="post">
         <input type="submit" class="btn btn-primary btn-large" value="Entrar al estacionamiento">
     </form>
@@ -57,6 +60,9 @@
     <form action="chat.jsp" method="post">
         <input type="submit" class="btn btn-primary btn-large" value="Ir al chat">
     </form>
+    <form action="verEncuestas.jsp" method="post">
+        <input type="submit" class="btn btn-primary btn-large" value="Ver encuestas">
+    </form>
     <% } else {%>
     
     <% if (usuario2 != null) { %>
@@ -73,6 +79,9 @@
     </form>
     <form action="chat.jsp" method="post">
         <input type="submit" class="btn btn-primary btn-large" value="Ir al chat">
+    </form>
+    <form action="encuesta.jsp" method="post">
+        <input type="submit" class="btn btn-primary btn-large" value="Realizar encuesta">
     </form>
     <% } %>
     

@@ -29,6 +29,7 @@ public class CerrarSesion extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 	}
@@ -37,6 +38,7 @@ public class CerrarSesion extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -44,7 +46,7 @@ public class CerrarSesion extends HttpServlet {
 		HttpSession sesion = request.getSession();
 		sesion.invalidate();
 
-	
+
 			request.setAttribute("info", "Cerraste sesión correctamente.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
 	}

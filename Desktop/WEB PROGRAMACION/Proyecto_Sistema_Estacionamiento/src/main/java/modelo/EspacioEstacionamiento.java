@@ -4,7 +4,7 @@ public class EspacioEstacionamiento {
     private int numero;
     private boolean estado;
     private String matricula;
-    
+
     public EspacioEstacionamiento(int numero, boolean estado, String matricula) {
         this.numero = numero;
         this.estado=estado;

@@ -1,7 +1,8 @@
-import modelo.Propietario;
-import modelo.Direccion;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import modelo.Direccion;
+import modelo.Propietario;
 
 class PropietarioTest {
 
@@ -31,7 +32,7 @@ class PropietarioTest {
         });
     }
 
-    
+
     @Test
     void setNumeroTelefono_TelefonoValido_DeberiaEstablecerNumeroTelefonoCorrectamente() {
         // Arrange

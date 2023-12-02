@@ -1,5 +1,11 @@
 package control;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,17 +16,12 @@ import almacen.ConexionBD;
 import modelo.Direccion;
 import modelo.Propietario;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 @WebServlet("/BuscarPropietarioActualizar")
 public class BuscarPropietarioActualizar extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Obtener los datos del formulario
         int id = Integer.parseInt(request.getParameter("id"));
         String matricula = request.getParameter("matricula");
