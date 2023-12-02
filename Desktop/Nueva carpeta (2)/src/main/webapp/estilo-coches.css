@@ -1,0 +1,50 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 20px;
+        }
+
+        table {
+            width: 98%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #C7C7C7;
+        }
+
+        th, td {
+            padding: 6px;
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background-color: #F0F0F0;
+        }
+
+        .vehiculo-info {
+            border: 1px solid #999999;
+            margin-left: 10px;
+            padding: 5px;
+            margin-right: 10px;
+            background-color: #F5F5F5;
+        }
+
+        .vehiculo-imagen {
+            text-align: center;
+        }
+
+        .estacionado-si {
+            color: green;
+        }
+
+        .estacionado-no {
+            color: red;
+        }
